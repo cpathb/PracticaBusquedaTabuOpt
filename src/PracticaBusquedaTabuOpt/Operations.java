@@ -1,4 +1,4 @@
-package BusquedaTabuOpt;
+package PracticaBusquedaTabuOpt;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -37,6 +37,54 @@ public class Operations{
         catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    /*
+        Función que realiza una inicialización voraz de la Solución inicial en base a las distancias de las ciudades
+    */
+    public static void greedyInitialization(){
+        int i=1, j=1, mejorCiudad,distancia,distanciaCandidata;
+        mejorCiudad=1;
+        distancia=Main.distancias.get(conversorTuplaPosicion(1,0));
+
+        while(i<Main.ciudades-1){
+            distanciaCandidata=Main.distancias.get(conversorTuplaPosicion(i,0));
+            if(distanciaCandidata<distancia){
+                mejorCiudad=i;
+                distancia=distanciaCandidata;
+            }
+            i++;
+        }
+        Main.solucion.add(0,mejorCiudad);
+
+        i=1;
+
+        while(i<Main.ciudades-1){ // Mientras no asociemos todas las ciudades a la solución
+            while(Main.solucion.contains(j)){
+                j++;
+            }
+            mejorCiudad=j;
+            distancia=Main.distancias.get(conversorTuplaPosicion(Main.solucion.get(i-1),j));
+
+            while(j<Main.ciudades){
+                while((i==j) || (Main.solucion.contains(j))){
+                    j++;
+                }
+                if(j<Main.ciudades){
+                    distanciaCandidata=Main.distancias.get(conversorTuplaPosicion(Main.solucion.get(i-1),j));
+                    if(distanciaCandidata<distancia){
+                        distancia=distanciaCandidata;
+                        mejorCiudad=j;
+                    }
+                    j++;
+                }
+            }
+            Main.solucion.add(i,mejorCiudad);
+            j=1;
+            i++;
+        }
+        printSolution(Main.solucion);
+        System.out.println(calculoDistancia(Main.solucion));
     }
 
     /*

@@ -1,4 +1,4 @@
-package BusquedaTabuOpt;
+package PracticaBusquedaTabuOpt;
 
 import java.util.*;
 
@@ -23,7 +23,7 @@ public class Main {
         int i=1;
         if(args.length==0){ // No se pasa ningún argumento
             Operations.distancias("distancias.txt");
-            Operations.aleatorio();
+            Operations.greedyInitialization();
             Operations.sobreescribirContenidoLista(solucion,solucionOptima);
             distanciaSolucion=Operations.calculoDistancia(solucion);
             distanciaSolucionOptima=distanciaSolucion;
@@ -40,7 +40,7 @@ public class Main {
                     System.out.println("***************");
                     reinicio++;
                     noMejora=0;
-                    Operations.reinicializarListaTabu();
+                    //Operations.reinicializarListaTabu();
                     Operations.sobreescribirContenidoLista(solucionOptima,solucion);
                     distanciaSolucion=distanciaSolucionOptima;
                 }
@@ -56,7 +56,7 @@ public class Main {
         else{
             if(args.length == 1){ // Se introdujo solo el archivo de distancias como argumento
                 Operations.distancias(args[0]);
-                Operations.aleatorio();
+                Operations.greedyInitialization();
                 Operations.sobreescribirContenidoLista(solucion,solucionOptima);
                 distanciaSolucion=Operations.calculoDistancia(solucion);
                 distanciaSolucionOptima=distanciaSolucion;
@@ -73,7 +73,7 @@ public class Main {
                         System.out.println("***************");
                         reinicio++;
                         noMejora=0;
-                        Operations.reinicializarListaTabu();
+                        //Operations.reinicializarListaTabu();
                         Operations.sobreescribirContenidoLista(solucionOptima,solucion);
                         distanciaSolucion=distanciaSolucionOptima;
                     }
@@ -105,7 +105,7 @@ public class Main {
                         System.out.println("***************");
                         reinicio++;
                         noMejora=0;
-                        Operations.reinicializarListaTabu();
+                        //Operations.reinicializarListaTabu();
                         Operations.sobreescribirContenidoLista(solucionOptima,solucion);
                         distanciaSolucion=distanciaSolucionOptima;
                     }
