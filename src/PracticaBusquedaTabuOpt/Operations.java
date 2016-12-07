@@ -88,36 +88,6 @@ public class Operations{
     }
 
     /*
-        Función que realiza una inicialización de la lista Solucion tomando valores aleatorios generados.
-        Existen condiciones especiales, si el aleatorio que se obtiene en la lista está generado, se incrementará en 1 su valor y se comprobará si ya está empleado,
-        esto se hace para evitar tener que generar aleatorios demasiadas veces para una misma posición de la lista.
-    */
-    public static void aleatorio(){
-        int i=0;
-        Double valor;
-        while(i<Main.ciudades-1){ // Mientras no asociemos todas las ciudades a la solución
-            valor=random();
-
-            int randomNumber= (int)(floor((valor*(Main.ciudades-1)))) + 1;
-            if(!Main.solucion.contains(randomNumber)){
-                Main.solucion.add(randomNumber);
-            }
-            else{
-                while(Main.solucion.contains(randomNumber)){
-                    if(randomNumber==(Main.ciudades-1)){ // Si es la ultima ciudad posible, la siguiente será la primera
-                        randomNumber=1;
-                    }
-                    else{
-                        randomNumber++; // Cuando la ciudad ya existe, se intenta asignar la siguiente inmediata
-                    }
-                }
-                Main.solucion.add(randomNumber);
-            }
-            i++;
-        }
-    }
-
-    /*
         Función que realiza una inicialización de la lista Solucion tomando valores aleatorios de un archivo. El archivo solo se leerá si no se ha leido anteriormente y almacenado en la lista de aleatorios.
         Existen condiciones especiales, si el aleatorio que se obtiene en la lista está generado, se incrementará en 1 su valor y se comprobará si ya está empleado,
         esto se hace para evitar tener que generar aleatorios demasiadas veces para una misma posición de la lista.
@@ -190,65 +160,120 @@ public class Operations{
     }
 
     /*
-        Función para realizar la exploración de los vecinos de una solución y actualizar esta con el mejor de ellos
+        Función para realizar la exploración de los vecinos de una solución y actualizar esta con el mejor de ellos,
+        esta función está modificada para que solo se generen una décima parte de los vecinos posibles, de forma aleatoria.
     */
     public static void generarVecinos(int numIteracion){
-        int i=1,j=1,k=0;
+        int i=1;
         List<Integer> mejorVecino=new ArrayList<Integer>();
         int distanciaMejorVecino=0;
         List<Integer> intercambioMejor=new ArrayList<Integer>();
         List<Integer> vecino=new ArrayList<Integer>();
         int distanciaVecino=0;
         List<Integer> intercambio=new ArrayList<Integer>();
+        List<Integer> intercambioAux=new ArrayList<Integer>();
 
-        while(i<Main.maxVecinos){
-            while(j<Main.ciudades-1){
-                while(k<j){
-                    reiniciarVecino(intercambio);
-                    intercambio.add(j);
-                    intercambio.add(k);
-                    if(!Main.listaTabu.contains(intercambio)) {
-                        if (mejorVecino.isEmpty()) {
-                            reiniciarVecino(intercambioMejor);
-                            intercambiarIndices(Main.solucion, mejorVecino, j, k);
-                            distanciaMejorVecino = calculoDistanciaIntercambio(Main.solucion,Main.distanciaSolucion,j,k);
-                            intercambioMejor.add(j);
-                            intercambioMejor.add(k);
+        while(i<Main.maxVecinos/Main.LimitadorJeneracionVecinos){
+            int random1,random2;
+            Double valor;
+            int aux;
+
+            valor=random();
+            random1=(int)(floor((valor * (Main.ciudades-1))));
+
+            valor=random();
+            random2=(int)(floor((valor * (Main.ciudades-1))));
+
+            if (random2==random1){ // Si los numeros aleatorios generados son iguales, incrementamos en uno el segundo número para que no sea así
+                if(random1==(Main.ciudades-2)){ // Si se ha llegado al límite se vuelve a 0
+                    random2=0;
+                    random1=1;
+                }
+                else{
+                    random2=0;
+                    random1++;
+                }
+            }
+            else{
+                if(random2>random1){
+                    aux=random1;
+                    random1=random2;
+                    random2=aux;
+                }
+            }
+
+            boolean nuevo=false;
+
+            while(nuevo==false){
+                intercambioAux.add(random1);
+                intercambioAux.add(random2);
+                if(Main.Vecinos.get(conversorTuplaPosicion(random1,random2))==0 && !Main.listaTabu.contains(intercambioAux)){
+                    Main.Vecinos.set(conversorTuplaPosicion(random1,random2),1);
+                    nuevo=true;
+                }
+                else{
+                    reiniciarVecino(intercambioAux);
+                    if(random2==random1-1){
+                        random2=0;
+                        if(random1==Main.ciudades-2){
+                            random1=1;
                         }
-                        else {
-                            reiniciarVecino(vecino);
-                            distanciaVecino = calculoDistanciaIntercambio(Main.solucion,Main.distanciaSolucion,j,k);
-                            if (distanciaVecino < distanciaMejorVecino) {
-                                intercambiarIndices(Main.solucion, vecino, j, k);
-                                sobreescribirContenidoLista(vecino, mejorVecino);
-                                distanciaMejorVecino = distanciaVecino;
-                                reiniciarVecino(intercambioMejor);
-                                intercambioMejor.add(j);
-                                intercambioMejor.add(k);
-                            }
+                        else{
+                            random1++;
                         }
                     }
-                    i++;
-                    k++;
-
+                    else{
+                        random2++;
+                    }
                 }
-                k=0;
-                j++;
             }
+
+            intercambio.add(random1);
+            intercambio.add(random2);
+
+            if (mejorVecino.isEmpty()) {
+                reiniciarVecino(intercambioMejor);
+                intercambiarIndices(Main.solucion, mejorVecino, random1, random2);
+                distanciaMejorVecino = calculoDistanciaIntercambio(Main.solucion,Main.distanciaSolucion,random1, random2);
+                intercambioMejor.add(random1);
+                intercambioMejor.add(random2);
+            }
+            else {
+                reiniciarVecino(vecino);
+                distanciaVecino = calculoDistanciaIntercambio(Main.solucion,Main.distanciaSolucion,random1,random2);
+                if(distanciaVecino<distanciaMejorVecino){
+                    intercambiarIndices(Main.solucion, vecino, random1,random2);
+                    sobreescribirContenidoLista(vecino, mejorVecino);
+                    distanciaMejorVecino = distanciaVecino;
+                    reiniciarVecino(intercambioMejor);
+                    intercambioMejor.add(random1);
+                    intercambioMejor.add(random2);
+                }
+            }
+            i++;
         }
+
         añadirTabu(intercambioMejor);
         sobreescribirContenidoLista(mejorVecino,Main.solucion);
         Main.distanciaSolucion=distanciaMejorVecino;
+
         if(Main.distanciaSolucion<Main.distanciaSolucionOptima){
             sobreescribirContenidoLista(Main.solucion,Main.solucionOptima);
             Main.distanciaSolucionOptima=Main.distanciaSolucion;
             Main.noMejora=0;
             Main.iteracionMejorSolucion=numIteracion;
         }
+
         else{
             Main.noMejora++;
+              //if(Main.distanciaUltimaSolucion<Main.distanciaSolucion){
+              //    Main.noMejora++;
+              //}
+              //else{
+                 //Main.noMejora=0;
+              //}
         }
-
+        Main.distanciaUltimaSolucion=Main.distanciaSolucion;
         System.out.println("\tINTERCAMBIO: ("+intercambioMejor.get(0)+", "+intercambioMejor.get(1)+")");
         System.out.print("\tRECORRIDO: ");
         Operations.printSolution(Main.solucion);
@@ -256,10 +281,10 @@ public class Operations{
         System.out.println("\tITERACIONES SIN MEJORA: "+ Main.noMejora);
         System.out.println("\tLISTA TABU:");
         printTabu(Main.listaTabu);
+        initializeNeighbors();
 
 
     }
-
     /*
         Función para calcular el coste (Distancia total) de una solución (Emplea todos los elementos de la solución)
     */
@@ -373,15 +398,6 @@ public class Operations{
     }
 
     /*
-        Función para reinicializar la lista tabú cuando sea necesario
-    */
-    public static void reinicializarListaTabu(){
-        while(Main.listaTabu.size()!=0){
-            Main.listaTabu.remove(0);
-        }
-    }
-
-    /*
         Función para copiar el contenido de una lista a otra sustituyendo el contenido original
     */
     public static void sobreescribirContenidoLista(List<Integer> Origen, List<Integer> Destino){
@@ -391,8 +407,6 @@ public class Operations{
 
         Destino.addAll(Origen);
     }
-
-
 
     private static void intercambiarIndices(List<Integer> Origen, List<Integer> Destino, int mayor, int menor){
         int i=0;
@@ -419,13 +433,33 @@ public class Operations{
     }
 
     private static void añadirTabu(List<Integer> intercambio){
-        if(Main.listaTabu.size()==100){
+        if(Main.listaTabu.size()==Main.tamListaTabu){
             Main.listaTabu.remove(0);
             Main.listaTabu.add(intercambio);
 
         }
         else{
             Main.listaTabu.add(intercambio);
+        }
+    }
+
+    /*
+        Función para inicializar la lista de vecinos generados
+    */
+    public static void initializeNeighbors(){
+        int i=0;
+
+        if(Main.Vecinos.size()!=Main.maxVecinos){
+            while(i<Main.maxVecinos){
+                Main.Vecinos.add(0);
+                i++;
+            }
+        }
+        else{
+            while(i<Main.maxVecinos){
+                Main.Vecinos.set(i,0);
+                i++;
+            }
         }
     }
 }
