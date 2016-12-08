@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="PracticaBusquedaTabuOpt:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/PracticaBusquedaTabuOpt_jar</output-path>
+    <root id="archive" name="PracticaBusquedaTabuOpt.jar">
+      <element id="module-output" name="PracticaBusquedaTabuOpt" />
+      <element id="dir-copy" path="$PROJECT_DIR$/src/META-INF" />
+    </root>
+  </artifact>
+</component>

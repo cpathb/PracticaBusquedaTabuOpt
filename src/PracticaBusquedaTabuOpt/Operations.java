@@ -173,7 +173,7 @@ public class Operations{
         List<Integer> intercambio=new ArrayList<Integer>();
         List<Integer> intercambioAux=new ArrayList<Integer>();
 
-        while(i<Main.maxVecinos/Main.LimitadorJeneracionVecinos){
+        while(i<Main.maxVecinos/Main.LimitadorGeneracionVecinos){
             int random1,random2;
             Double valor;
             int aux;
@@ -266,14 +266,7 @@ public class Operations{
 
         else{
             Main.noMejora++;
-              //if(Main.distanciaUltimaSolucion<Main.distanciaSolucion){
-              //    Main.noMejora++;
-              //}
-              //else{
-                 //Main.noMejora=0;
-              //}
         }
-        Main.distanciaUltimaSolucion=Main.distanciaSolucion;
         System.out.println("\tINTERCAMBIO: ("+intercambioMejor.get(0)+", "+intercambioMejor.get(1)+")");
         System.out.print("\tRECORRIDO: ");
         Operations.printSolution(Main.solucion);

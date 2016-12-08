@@ -3,7 +3,7 @@ echo "" > output.txt
 
 for i in {1..10};
 do
-	java -jar PracticaBusquedaTabu.jar | tail -n 4 >> output.txt
+	java -jar PracticaBusquedaTabuOpt.jar | tail -n 4 >> output.txt
 done
 
 grep -r "COSTE" -i output.txt > resDis.txt 

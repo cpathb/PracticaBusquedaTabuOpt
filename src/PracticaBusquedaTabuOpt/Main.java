@@ -7,14 +7,13 @@ import java.util.*;
 public class Main {
     public static final int ciudades = 100; // Definimos en esta constante el número de ciudades que habrá en la búsqueda
     public static int maxVecinos = ((ciudades-1)*(ciudades-2)/2); // Variable global que lleva cuenta de el número de vecinos que hemos generado
-    public static int LimitadorJeneracionVecinos=5; // Variable global empleada para restringir la cantidad de vecinos a generar (10 implica la generación de décima parte de los vecinos, 2 la mitad, ...)
+    public static int LimitadorGeneracionVecinos=5; // Variable global empleada para restringir la cantidad de vecinos a generar (10 implica la generación de décima parte de los vecinos, 2 la mitad, ...)
     public static int tamListaTabu=100; // Número de elementos que se podrán insertar en la lista tabú
     public static int numIteracionesTotales=10000; // Variable global que indica el número de iteraciones para mejorar el resultado que se harán
-    public static int numIteracionesSinMejora=163; // Variable global que indica el número de iteraciones sin mejora necesarias para volver a la solución optima y generar los vecinos nuevamente desde ella
+    public static int numIteracionesSinMejora=100; // Variable global que indica el número de iteraciones sin mejora necesarias para volver a la solución optima y generar los vecinos nuevamente desde ella
     public static int posAleatorios = 0; // Variable global que lleva cuenta de el número de aleaorios que se han empleado
     public static int distanciaSolucion=0;
     public static int distanciaSolucionOptima=0;
-    public static int distanciaUltimaSolucion=0;
     public static int noMejora=0;
     public static int reinicio=1;
     public static int iteracionMejorSolucion=1;
@@ -36,7 +35,6 @@ public class Main {
             Operations.sobreescribirContenidoLista(solucion,solucionOptima);
             distanciaSolucion=Operations.calculoDistancia(solucion);
             distanciaSolucionOptima=distanciaSolucion;
-            distanciaUltimaSolucion=distanciaSolucion;
             System.out.println("RECORRIDO INICIAL");
             System.out.print("\tRECORRIDO: ");
             Operations.printSolution(solucion);
@@ -70,7 +68,6 @@ public class Main {
                 Operations.sobreescribirContenidoLista(solucion,solucionOptima);
                 distanciaSolucion=Operations.calculoDistancia(solucion);
                 distanciaSolucionOptima=distanciaSolucion;
-                distanciaUltimaSolucion=distanciaSolucion;
                 System.out.println("RECORRIDO INICIAL");
                 System.out.print("\tRECORRIDO: ");
                 Operations.printSolution(solucion);
@@ -103,7 +100,6 @@ public class Main {
                 Operations.sobreescribirContenidoLista(solucion,solucionOptima);
                 distanciaSolucion=Operations.calculoDistancia(solucion);
                 distanciaSolucionOptima=distanciaSolucion;
-                distanciaUltimaSolucion=distanciaSolucion;
                 System.out.println("RECORRIDO INICIAL");
                 System.out.print("\tRECORRIDO: ");
                 Operations.printSolution(solucion);
